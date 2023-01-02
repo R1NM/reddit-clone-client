@@ -57,7 +57,7 @@ const Login = () => {
                     />
 
 
-                    <button className='w-full py-2 mb-1 text-xs font-medium text-white uppercase bg-gray-400 border border-gray-400 rounded'>
+                    <button className='w-full py-2 mb-1 text-xs font-medium text-white uppercase bg-blue-500 border border-blue-500 rounded'>
                     Login
                     </button>
                 </form>
