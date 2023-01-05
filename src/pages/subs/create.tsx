@@ -3,6 +3,7 @@ import InputGroup from '../../components/InputGroup'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { GetServerSideProps } from 'next'
+import { useAuthState } from '../../context/auth'
 
 const SubCreate = () => {
     const [name, setname] = useState("")
@@ -11,6 +12,10 @@ const SubCreate = () => {
     const [errors, seterrors] = useState<any>({})
 
     let router=useRouter();
+
+    const {authenticated} = useAuthState();
+
+    if(!authenticated) router.push("/login")
 
     const handleSubmit = async (e:FormEvent) =>{
         e.preventDefault();
@@ -23,7 +28,7 @@ const SubCreate = () => {
                 withCredentials: true
             })
             console.log('res',res);
-            // router.push(`/r/${res.data.name}`)
+            router.push(`/r/${res.data.name}`)
         } catch (error: any) {
             console.error(error);
             seterrors(error.response.data||{});
