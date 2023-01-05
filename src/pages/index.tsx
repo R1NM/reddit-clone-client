@@ -20,9 +20,9 @@ export default function Home() {
   const subList = topSubs?.map((sub)=>(
     <div key={sub.name} className="flex items-center px-4 py-2 text-xs border-b">
       <Link href={`/r/${sub.name}`}>
-        <Image src="https://www.gravatar.com/avatar?d=mp&f=y" 
-        className="rounded-full cursor-pointer"
-        alt='sub'
+        <Image src={sub.imageUrl}
+        className="rounded-full cursor-pointer bg-white"
+        alt={sub.name}
         width={24} height={24}
         />
       </Link>
