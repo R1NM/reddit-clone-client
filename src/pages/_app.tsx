@@ -5,6 +5,9 @@ import { AuthProvider } from '../context/auth';
 import { useRouter } from 'next/router';
 import NavBar from '../components/NavBar';
 import Head from 'next/head';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+library.add(fas)
 
 export default function App({ Component, pageProps }: AppProps) {
   Axios.defaults.baseURL=process.env.NEXT_PUBLIC_SERVER_BASE_URL+"/api";

@@ -5,6 +5,7 @@ import  useSWR from 'swr'
 import cls from 'classnames'
 import Image from 'next/image';
 import { useAuthState } from '../../context/auth';
+import SideBar from '../../components/SideBar';
 
 const SubPage = () => {
     const fetcher =async (url:string) => {
@@ -111,6 +112,11 @@ const SubPage = () => {
             </div>
             <div className='flex max-w-5xl px-4 pt-5 mx-auto'>
                 {/* post */}
+                <div className='w-full md:mr-3 md:w-8/12'>
+
+                </div>
+                {/* side bar */}
+                <SideBar sub={sub} />
             </div>
         </Fragment>
     )}
