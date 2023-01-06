@@ -7,6 +7,8 @@ import NavBar from '../components/NavBar';
 import Head from 'next/head';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { SWRConfig } from 'swr';
+import axios from 'axios';
 library.add(fas)
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -18,8 +20,20 @@ export default function App({ Component, pageProps }: AppProps) {
   const authRoutes = ["/register","/login"]
   const authRoute = authRoutes.includes(pathname)
 
+  //swr fetcher
+  const fetcher =async (url:string) => {
+    try {
+        const res  = await axios.get(url);
+        return res.data
+    } catch (error:any) {
+        throw error.response.data
+    }
+  }
 
-  return <AuthProvider>
+  return <SWRConfig
+    value={{fetcher}}
+  >
+    <AuthProvider>
     <Head>
         <title>Reddit_Clone</title>
         <link rel="icon" href="/favicon.ico" />
@@ -29,4 +43,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <Component {...pageProps} />
     </div>
   </AuthProvider>
+  </SWRConfig>
+  
 }
