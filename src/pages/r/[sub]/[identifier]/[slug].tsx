@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import cls from 'classnames';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
@@ -16,11 +17,25 @@ const PostPage = () => {
     const {authenticated, user} = useAuthState();
 
 
-    const {data: post, error} = useSWR<Post>(identifier&&slug? `/posts/${identifier}/${slug}`:null)
-    const {data: comments,mutate} = useSWR<Comment[]>(identifier&&slug ? `/posts/${identifier}/${slug}/comments`:null)
+    const {data: post, error,mutate:postMutate} = useSWR<Post>(identifier&&slug? `/posts/${identifier}/${slug}`:null)
+    const {data: comments,mutate:commentMutate} = useSWR<Comment[]>(identifier&&slug ? `/posts/${identifier}/${slug}/comments`:null)
 
     const commentList = comments?.map((comment)=>(
         <div className='flex' key={comment.identifier}>
+            {/* Comment Vote */}
+            <div className='flex-shrink-0 w-10 py-2 text-center rounded-l'>
+                            <div className='w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300  hover:text-rose-400'
+                                onClick={()=>vote(1,comment)}
+                            >
+                                <FontAwesomeIcon icon={"arrow-up"} className={cls({"text-rose-400": comment.userVote===1})}/>
+                            </div>
+                            <p className='text-xs font-bold'> {comment?.voteScore}</p>
+                            <div className='w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300  hover:text-blue-400'
+                                onClick={()=>vote(-1,comment)}
+                            >
+                                <FontAwesomeIcon icon={"arrow-down"} className={cls({"text-blue-400": comment.userVote===-1})}/>
+                            </div>
+                        </div>
             <div className='py-2 pr-2'>
                 <p className='mb-1 text-xs leading-none'>
                     <Link href={`/u/${comment.username}`} className="mr-1 font-bold hover:underline">
@@ -47,7 +62,27 @@ const PostPage = () => {
                 body: newComment
             })
             setnewComment("")
-            mutate()
+            commentMutate();
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
+
+    const vote =async (value: number, comment?:Comment) => {
+        if(!authenticated) router.push("/login")
+
+        //if aleady clicked, reset
+        if((!comment&&value===post?.userVote)||(comment && comment.userVote ===value)) value=0;
+
+        try {
+            await axios.post("/votes",{
+                identifier,
+                slug,
+                commentIdentifier: comment?.identifier,
+                value
+            })
+            postMutate();commentMutate();
         } catch (error) {
             console.error(error);
             
@@ -60,11 +95,28 @@ const PostPage = () => {
             <div className='bg-white rounded'>
                 {post&&(<>
                     <div className='flex'>
+                        {/* Post Vote */}
+                        <div className='flex-shrink-0 w-10 py-2 text-center rounded-l'>
+                            <div className='w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300  hover:text-rose-400'
+                                onClick={()=>vote(1)}
+                            >
+                                <FontAwesomeIcon icon={"arrow-up"} className={cls({"text-rose-400": post.userVote===1})}/>
+                            </div>
+                            <p className='text-xs font-bold'> {post.voteScore}</p>
+                            <div className='w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300  hover:text-blue-400'
+                                onClick={()=>vote(-1)}
+                            >
+                                <FontAwesomeIcon icon={"arrow-down"} className={cls({"text-blue-400": post.userVote===-1})}/>
+                            </div>
+                        </div>
+                        
+                        {/* Post */}
                         <div className='py-2 pr-2'>
                             <div className='flex items-center'>
                                 <p className='text-xs text-gray-400'>
                                     Posted by
                                     <Link href={`/u/${post.username}`} className="mx-1 hover:underline">
+                                        <FontAwesomeIcon icon={["fas","user-alt"]} style={{maxWidth:10,marginRight:3}} />
                                         /u/{post.username}
                                     </Link>
                                     <Link href={post.url} className="mx-1 hover:underline">
@@ -81,10 +133,9 @@ const PostPage = () => {
                                 </button>
                             </div>
                         </div>
-                        {/* {post && post.sub && <SideBar sub={post.sub}/>} */}
                     </div>
-                    {/* write comment */}
-                    <div className='pr-6 mb-4'>
+                    {/* new comment */}
+                    <div className='pl-10 pr-6 mb-4'>
                         {authenticated ?(
                             <div>
                                 <p className='mb-1 text-xs'>
@@ -115,6 +166,7 @@ const PostPage = () => {
                                 </div>
                             </div>
                         )}
+                    {/* Comment list */}
                     {comments&&(<hr className='mt-3'/>)}
                     </div>
                     {commentList}
@@ -122,8 +174,10 @@ const PostPage = () => {
 
                 </>)}
             </div>
-
+            
         </div>
+        {post && post.sub && <SideBar sub={post.sub}/>}
+
     </div>
     )
 }
