@@ -1,18 +1,20 @@
 import axios from 'axios'
 import { useRouter } from 'next/router';
 import React,{Fragment,useRef,useState,useEffect, ChangeEvent} from 'react'
-import  useSWR from 'swr'
+import  useSWR, { mutate } from 'swr'
 import cls from 'classnames'
 import Image from 'next/image';
 import { useAuthState } from '../../context/auth';
 import SideBar from '../../components/SideBar';
+import { Post } from '../../types';
+import PostCard from '../../components/PostCard';
 
 const SubPage = () => {
 
     const router = useRouter()
     const subName = router.query.sub;
 
-    const {data: sub, error} = useSWR(subName?`/subs/${subName}`:null);
+    const {data: sub, error,mutate:subMutate} = useSWR(subName?`/subs/${subName}`:null);
     // console.log(sub);
 
     const [ownSub, setownSub] = useState(false)
@@ -54,6 +56,19 @@ const SubPage = () => {
         }
     }
 
+    let renderPosts;
+    if(!sub){
+        renderPosts =<p className='text-lg text-center'>Loading...</p>
+    }else if(sub.posts.length===0){
+        renderPosts=<p className='text-lg text-center'>No One Posted Yet...</p>
+    } else {
+        // console.log(sub.posts);
+        
+        renderPosts= sub.posts.map((post:Post)=>
+            <PostCard key={post.identifier} post={post} subMutate={subMutate}/>
+        )
+        
+    }
     
     
     return (
@@ -105,7 +120,7 @@ const SubPage = () => {
             <div className='flex max-w-5xl px-4 pt-5 mx-auto'>
                 {/* post */}
                 <div className='w-full md:mr-3 md:w-8/12'>
-
+                    {renderPosts}
                 </div>
                 {/* side bar */}
                 <SideBar sub={sub} />
