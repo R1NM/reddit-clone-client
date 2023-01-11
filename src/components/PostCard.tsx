@@ -12,7 +12,7 @@ import axios from 'axios'
 
 interface PostCardProps {
     post: Post
-    subMutate: () => void
+    mutate?: () => void
 }
 
 const PostCard = ({
@@ -30,7 +30,7 @@ const PostCard = ({
         username,
         sub,
     },
-    subMutate
+    mutate
 }:PostCardProps) => {
     const {authenticated} = useAuthState()
     const router = useRouter()
@@ -47,8 +47,8 @@ const PostCard = ({
                 slug,
                 value
             })
-            if(subMutate){
-                subMutate();
+            if(mutate){
+                mutate();
             }
         } catch (error) {
             console.error(error);
@@ -94,7 +94,7 @@ const PostCard = ({
                     <p className='text-xs text-gray-400 flex'>
                     Posted by
                     <FontAwesomeIcon icon={["fas","user-alt"]} style={{width:10,margin:3}} />
-                    <Link href={`/u/${username}`} className=" hover:underline">
+                    <Link href={`/u/${username}`} className=" hover:underline mr-1">
                         /u/{username}
                     </Link>
                     {dayjs(createdAt).format("YYYY-MM-DD HH:mm")}
