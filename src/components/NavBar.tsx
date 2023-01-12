@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import Link from 'next/link'
 import React, { Fragment } from 'react'
@@ -42,7 +43,7 @@ const NavBar : React.FC = () => {
                             <Link href="/login">LOGIN</Link>
                         </div>
                         <div className='w-20 p-2 text-center text-white bg-blue-500 rounded'>
-                            <Link href="/login">SIGN UP</Link>
+                            <Link href="/register">SIGN UP</Link>
                         </div>
                     </Fragment>
                 )

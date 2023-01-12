@@ -65,7 +65,7 @@ const SubPage = () => {
         // console.log(sub.posts);
         
         renderPosts= sub.posts.map((post:Post)=>
-            <PostCard key={post.identifier} post={post} subMutate={subMutate}/>
+            <PostCard key={post.identifier} post={post} mutate={subMutate}/>
         )
         
     }

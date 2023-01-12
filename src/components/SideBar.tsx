@@ -14,7 +14,7 @@ const SideBar = ({sub}:{sub:Sub}) => {
 
     return (
     <div className='hidden w-4/12 ml-3 md:block'>
-        <div className='bg-white border rounded'>
+        <div className='bg-white rounded'>
             <div className='p-3 bg-rose-400  rounded-t'>
                 <p className='font-semibold text-white'>About</p>
             </div>

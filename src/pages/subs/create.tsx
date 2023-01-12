@@ -38,7 +38,7 @@ const SubCreate = () => {
 
     return (
     <div className='flex flex-col justify-center pt-16'>
-        <div className='w-10/12 mx-auto md:w-96'>
+        <div className='w-10/12 p-4 mx-auto md:w-96 bg-white rounded'>
             <h1 className='mb-2 text-2xl font-bold'> Create Community</h1>
             <hr/>
             <form onSubmit={handleSubmit}>

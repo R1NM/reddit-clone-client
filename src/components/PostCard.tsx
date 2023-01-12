@@ -5,7 +5,6 @@ import { Post } from '../types'
 import Link from 'next/link'
 import dayjs from 'dayjs'
 import Image from 'next/image'
-import classNames from 'classnames'
 import { useAuthState } from '../context/auth'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -73,7 +72,7 @@ const PostCard = ({
                         
         {/* Post */}
         <div className='w-full p-2'>
-            <div className='flex'>
+            <div className='flex items-center'>
                 { !isInSubPage &&
                     (<>
                         <Link href={`/r/${subName}`} passHref>
@@ -91,7 +90,7 @@ const PostCard = ({
                         
                     </>)
                 }
-                    <p className='text-xs text-gray-400 flex'>
+                    <p className={`${cls({'mt-1':!isInSubPage})} text-xs text-gray-400 flex`}>
                     Posted by
                     <FontAwesomeIcon icon={["fas","user-alt"]} style={{width:10,margin:3}} />
                     <Link href={`/u/${username}`} className=" hover:underline mr-1">
@@ -107,7 +106,7 @@ const PostCard = ({
             <p className='my-3 text-sm'>{body}</p>
             <div className='flex'>
                 <Link href={url} className='text-rose-400' passHref>
-                    <FontAwesomeIcon icon={["fas","comment-alt"]} style={{maxWidth:20}}/>
+                    <FontAwesomeIcon icon={["fas","comment-alt"]} style={{width:20}}/>
                     <span className='font-semibold'> {commentCount} Comments</span>
                 </Link>
             </div>
